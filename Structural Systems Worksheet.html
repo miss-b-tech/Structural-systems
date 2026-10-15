@@ -1,0 +1,568 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Structural Systems Worksheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a blueprint spec sheet. Title block up top, five lettered parts stacked, results sheet at the end. */
+:root {
+  --paper: #F1F5F9;
+  --card: #FFFFFF;
+  --ink: #14263D;
+  --muted: #56687C;
+  --line: #C8D4E0;
+  --blue: #1D5CA6;
+  --blue-soft: #E1ECF8;
+  --hazard: #F2B705;
+  --hazard-ink: #1A1A12;
+  --good: #1B7A4C;
+  --good-soft: #E2F3EA;
+  --bad: #B3362E;
+  --bad-soft: #FBE7E5;
+  --grid: rgba(29, 92, 166, 0.06);
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", Verdana, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1A29; --card: #13253A; --ink: #E2EBF4; --muted: #93A6BB; --line: #2A3F57;
+    --blue: #6FA9EC; --blue-soft: #1A3350; --hazard: #F5C33B; --hazard-ink: #1A1A12;
+    --good: #52C48D; --good-soft: #143826; --bad: #F2806F; --bad-soft: #3E1D1B;
+    --grid: rgba(111, 169, 236, 0.07); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1A29; --card: #13253A; --ink: #E2EBF4; --muted: #93A6BB; --line: #2A3F57;
+  --blue: #6FA9EC; --blue-soft: #1A3350; --hazard: #F5C33B; --hazard-ink: #1A1A12;
+  --good: #52C48D; --good-soft: #143826; --bad: #F2806F; --bad-soft: #3E1D1B;
+  --grid: rgba(111, 169, 236, 0.07); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.wrap {
+  max-width: 880px; margin: 0 auto;
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 28px;
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+.label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* Title block */
+.titleblock { border: 2px solid var(--ink); background: var(--card); display: grid; grid-template-columns: 1fr auto; }
+.tb-main { padding: 20px 22px; border-right: 2px solid var(--ink); min-width: 0; }
+.tb-main h1 { font-size: clamp(34px, 7vw, 52px); line-height: 1; text-transform: uppercase; }
+.tb-main p { margin: 10px 0 0; color: var(--muted); max-width: 60ch; }
+.tb-side { display: grid; grid-template-rows: repeat(3, auto); min-width: 190px; }
+.tb-cell { padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.tb-cell:last-child { border-bottom: 0; }
+.tb-cell input { font: inherit; font-size: 16px; border: 0; border-bottom: 1px dashed var(--muted); background: transparent; color: var(--ink); padding: 2px 0; width: 100%; }
+.tb-cell input:focus { outline: none; border-bottom: 2px solid var(--blue); }
+.tb-std { font-family: var(--mono); font-size: 14px; }
+@media (max-width: 620px) {
+  .titleblock { grid-template-columns: 1fr; }
+  .tb-main { border-right: 0; border-bottom: 2px solid var(--ink); }
+}
+
+/* Progress */
+.progress { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.bar { flex: 1 1 220px; height: 10px; background: var(--line); position: relative; overflow: hidden; }
+.bar span { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--hazard); transition: width .3s; }
+.progress .count { font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+
+/* Sections */
+section.part { background: var(--card); border: 1px solid var(--line); }
+.part-head { display: flex; gap: 14px; align-items: stretch; border-bottom: 1px solid var(--line); }
+.part-letter { font-family: var(--display); font-size: 40px; font-weight: 700; background: var(--ink); color: var(--paper); width: 64px; display: grid; place-items: center; flex: none; }
+.part-title { padding: 12px 14px 12px 0; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.part-title h2 { font-size: 30px; text-transform: uppercase; line-height: 1.05; }
+.part-score { align-self: center; margin-right: 14px; font-family: var(--mono); font-size: 13px; padding: 4px 8px; border: 1px solid var(--line); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.part-score.done { background: var(--hazard); color: var(--hazard-ink); border-color: var(--hazard); }
+.part-body { padding: 18px; display: flex; flex-direction: column; gap: 16px; }
+.intro { margin: 0; max-width: 65ch; }
+
+.qgrid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+.qgrid.compact { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.q { border: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; background: var(--card); }
+.q.right { border-color: var(--good); background: var(--good-soft); }
+.q.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.q-num { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.q-prompt { font-weight: 700; margin: 0; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt {
+  font: inherit; font-size: 16px; padding: 8px 14px; cursor: pointer;
+  border: 1.5px solid var(--blue); background: var(--card); color: var(--blue);
+  border-radius: 2px; text-align: left;
+}
+.opt:hover:not(:disabled) { background: var(--blue-soft); }
+.opt:focus-visible { outline: 3px solid var(--hazard); outline-offset: 2px; }
+.opt:disabled { cursor: default; opacity: .55; }
+.opt.is-right { background: var(--good); border-color: var(--good); color: var(--card); opacity: 1; }
+.opt.is-pick-wrong { background: var(--bad); border-color: var(--bad); color: var(--card); opacity: 1; }
+.why { margin: 0; font-size: 15px; }
+.why b { font-family: var(--display); font-size: 18px; letter-spacing: .02em; text-transform: uppercase; margin-right: 6px; }
+
+/* Diagram */
+.diagram { border: 1px solid var(--line); background: var(--paper); overflow-x: auto; }
+.diagram svg { display: block; width: 100%; min-width: 320px; height: auto; }
+.d-ink { stroke: var(--ink); fill: none; stroke-width: 2.5; }
+.d-fill { fill: var(--card); stroke: var(--ink); stroke-width: 2.5; }
+.d-pier { fill: var(--line); stroke: var(--ink); stroke-width: 2.5; }
+.d-water { fill: var(--blue-soft); stroke: none; }
+.d-wave { stroke: var(--blue); fill: none; stroke-width: 2; }
+.d-ground { fill: var(--line); stroke: none; opacity: .6; }
+.d-lead { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 4 3; fill: none; }
+.d-mark { fill: var(--hazard); stroke: var(--ink); stroke-width: 2; }
+.d-num { fill: var(--hazard-ink); font-family: var(--display); font-weight: 700; font-size: 22px; }
+.d-cap { fill: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; }
+
+/* Text responses */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-weight: 700; }
+.field small { color: var(--muted); font-size: 14px; }
+.field textarea, .field input, .field select {
+  font: inherit; font-size: 16px; color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--line); padding: 10px 12px; border-radius: 2px; width: 100%;
+}
+.field textarea { min-height: 90px; resize: vertical; }
+.field textarea:focus, .field input:focus, .field select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+.row2 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+/* Results */
+.results { border: 2px solid var(--ink); background: var(--card); }
+.results-head { background: var(--ink); color: var(--paper); padding: 14px 18px; display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.results-head h2 { font-size: 30px; text-transform: uppercase; }
+.big { font-family: var(--display); font-size: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.results-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.tally { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border: 1px solid var(--line); }
+.tally div { padding: 10px 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.tally strong { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 18px; }
+.checklist { margin: 0; padding-left: 20px; color: var(--muted); }
+.checklist li.ok { color: var(--good); }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: .04em; text-transform: uppercase; padding: 10px 20px; border: 2px solid var(--ink); background: var(--hazard); color: var(--hazard-ink); cursor: pointer; border-radius: 2px; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.status { font-size: 15px; color: var(--good); }
+#copyText { width: 100%; min-height: 160px; font-family: var(--mono); font-size: 13px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); padding: 10px; }
+.confirm { border: 1.5px solid var(--bad); background: var(--bad-soft); padding: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) { .bar span { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="titleblock">
+    <div class="tb-main">
+      <span class="label">Engineering &amp; Technology · Grade 7</span>
+      <h1>Structural Systems</h1>
+      <p>Show how the parts of a structure work together to carry loads. Parts A–D check your answers right away. Your first click counts, so think before you tap. Part E is about your team's build.</p>
+    </div>
+    <div class="tb-side">
+      <div class="tb-cell"><span class="label">Name</span><input id="stuName" autocomplete="name" placeholder="First and last"></div>
+      <div class="tb-cell"><span class="label">Period / Class</span><input id="stuPeriod" placeholder="e.g. Period 3"></div>
+      <div class="tb-cell"><span class="label">Standard</span><span class="tb-std">7.MS-ETS3-4(MA)</span></div>
+    </div>
+  </header>
+
+  <div class="progress" aria-live="polite">
+    <span class="label">Progress</span>
+    <div class="bar"><span id="barFill"></span></div>
+    <span class="count" id="progCount">0 / 0</span>
+  </div>
+
+  <div id="parts"></div>
+
+  <section class="part" id="partE">
+    <div class="part-head">
+      <div class="part-letter">E</div>
+      <div class="part-title"><span class="label">Your build</span><h2>Build Analysis</h2></div>
+      <span class="part-score" id="scoreE">0 / 7 done</span>
+    </div>
+    <div class="part-body">
+      <p class="intro">Use your team's craft-stick and Lego structure and your test results. Write in full sentences. Look at your build photo if your structure was taken apart.</p>
+      <div class="field">
+        <label for="t_what">1. What did your team build, and what was it designed to do?</label>
+        <textarea id="t_what" data-text placeholder="Our team built a covered pedestrian bridge that…"></textarea>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="t_load">2. Maximum live load it held</label>
+          <input id="t_load" data-text placeholder="e.g. 3 textbooks, or 412 pennies">
+        </div>
+        <div class="field">
+          <label for="t_force">3. Which force caused the failure?</label>
+          <select id="t_force" data-text>
+            <option value="">Choose one</option>
+            <option>Tension</option><option>Compression</option><option>Shear</option><option>Torsion</option>
+            <option>It did not fail</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="t_fail">4. Where did your structure fail first? Which component was it?</label>
+        <textarea id="t_fail" data-text placeholder="The deck bent in the middle because…"></textarea>
+      </div>
+      <div class="field">
+        <label for="t_change">5. What one change did you make in the redesign? Did it help? How do you know?</label>
+        <textarea id="t_change" data-text placeholder="We added a diagonal brace to the walls. It held ___ more because…"></textarea>
+      </div>
+      <div class="field">
+        <label for="t_system">6. Trace the load path. How did your foundation, decking, walls, and roof work together to carry the load?</label>
+        <small>Start where the weight lands and end at the table.</small>
+        <textarea id="t_system" data-text placeholder="The weight landed on the decking, which…"></textarea>
+      </div>
+      <div class="field">
+        <label for="t_green">7. If your structure had to be a greenhouse instead, what would you change and why?</label>
+        <textarea id="t_green" data-text placeholder="I would change the walls and roof to…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="results" id="results">
+    <div class="results-head">
+      <h2>Results Sheet</h2>
+      <span class="big" id="bigScore">0 / 0</span>
+    </div>
+    <div class="results-body">
+      <div class="tally" id="tally"></div>
+      <ul class="checklist" id="checklist"></ul>
+      <p class="intro">When you are finished, copy your answers and paste them into the assignment your teacher posted.</p>
+      <div class="actions">
+        <button class="btn" id="copyBtn" type="button">Copy my answers</button>
+        <button class="btn ghost" id="resetBtn" type="button">Start over</button>
+        <span class="status" id="copyStatus" aria-live="polite"></span>
+      </div>
+      <div class="confirm" id="confirmBox" hidden>
+        <span>This erases every answer on this device. Are you sure?</span>
+        <button class="btn" id="confirmYes" type="button">Yes, erase</button>
+        <button class="btn ghost" id="confirmNo" type="button">Keep my work</button>
+      </div>
+      <textarea id="copyText" readonly hidden aria-label="Your answers as text"></textarea>
+    </div>
+  </section>
+</div>
+
+<script>
+const BRIDGE_SVG = `
+<svg viewBox="0 0 640 320" role="img" aria-label="Side view of a covered bridge with four numbered parts">
+  <rect class="d-ground" x="0" y="250" width="185" height="70"/>
+  <rect class="d-ground" x="455" y="250" width="185" height="70"/>
+  <rect class="d-water" x="185" y="268" width="270" height="52"/>
+  <path class="d-wave" d="M195 282 q15 -8 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0"/>
+  <path class="d-wave" d="M210 300 q15 -8 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0"/>
+  <rect class="d-pier" x="120" y="212" width="60" height="78"/>
+  <rect class="d-pier" x="460" y="212" width="60" height="78"/>
+  <rect class="d-fill" x="96" y="196" width="448" height="16"/>
+  <rect class="d-fill" x="110" y="122" width="420" height="74"/>
+  <g class="d-ink">
+    <path d="M110 196 L180 122 L250 196 L320 122 L390 196 L460 122 L530 196"/>
+    <path d="M110 122 L180 196 M250 122 L320 196 M390 122 L460 196"/>
+    <path d="M180 122 L250 122 M320 122 L390 122" opacity="0"/>
+  </g>
+  <polygon class="d-fill" points="88,124 320,58 552,124"/>
+  <path class="d-ink" d="M88 124 L552 124"/>
+
+  <circle class="d-mark" cx="320" cy="100" r="17"/><text class="d-num" x="320" y="108" text-anchor="middle">1</text>
+  <path class="d-lead" d="M600 160 L533 160"/>
+  <circle class="d-mark" cx="608" cy="160" r="17"/><text class="d-num" x="608" y="168" text-anchor="middle">2</text>
+  <path class="d-lead" d="M320 204 L320 236"/>
+  <circle class="d-mark" cx="320" cy="250" r="17"/><text class="d-num" x="320" y="258" text-anchor="middle">3</text>
+  <path class="d-lead" d="M150 250 L66 250"/>
+  <circle class="d-mark" cx="48" cy="250" r="17"/><text class="d-num" x="48" y="258" text-anchor="middle">4</text>
+  <text class="d-cap" x="320" y="24" text-anchor="middle">COVERED PEDESTRIAN BRIDGE · SIDE VIEW</text>
+</svg>`;
+
+const COMP = ["Foundation", "Decking", "Walls", "Roofing"];
+const FORCES = ["Tension", "Compression", "Shear", "Torsion"];
+const LD = ["Live load", "Dead load"];
+
+const SECTIONS = [
+  {
+    key: "A", kicker: "Components", title: "Name the Parts",
+    intro: "Every structural system needs four components. Look at the covered bridge and name each numbered part. Then match each part to its job.",
+    diagram: true,
+    qs: [
+      { id: "a1", p: "What is part 1?", o: COMP, a: 3, why: "The roofing sits on top and protects the bridge from rain and snow." },
+      { id: "a2", p: "What is part 2?", o: COMP, a: 2, why: "The walls run along the sides, hold up the roof, and resist wind. The diagonal pieces make them stiffer." },
+      { id: "a3", p: "What is part 3?", o: COMP, a: 1, why: "The decking is the flat surface people walk on. It carries the live load." },
+      { id: "a4", p: "What is part 4?", o: COMP, a: 0, why: "The foundation (the piers) passes all the weight down into the ground." },
+      { id: "a5", p: "Which part carries the weight of the whole structure down into the ground?", o: COMP, a: 0, why: "The foundation is the last stop on the load path before the ground." },
+      { id: "a6", p: "Which part gives people a flat surface and holds up the live load?", o: COMP, a: 1, why: "Decking is the floor of a bridge or building." },
+      { id: "a7", p: "Which part holds up the roof and resists wind pushing on the sides?", o: COMP, a: 2, why: "Load-bearing walls carry the roof and brace the structure." },
+      { id: "a8", p: "Which part keeps out rain and snow and has to hold the weight of snow?", o: COMP, a: 3, why: "Roofing protects everything below it and carries environmental loads like snow." }
+    ]
+  },
+  {
+    key: "B", kicker: "Loads", title: "Live or Dead?",
+    intro: "A dead load is the weight of the structure itself. It never moves. A live load is weight that moves or changes, like people, cars, furniture, and snow.",
+    compact: true,
+    qs: [
+      { id: "b1", p: "People walking across a bridge", o: LD, a: 0, why: "People come and go, so they are a live load." },
+      { id: "b2", p: "The roof of a house", o: LD, a: 1, why: "The roof is part of the structure and is always there." },
+      { id: "b3", p: "Snow piled on a roof", o: LD, a: 0, why: "Snow comes and goes with the weather, so it is a live load." },
+      { id: "b4", p: "The walls of a building", o: LD, a: 1, why: "Walls are part of the structure's own weight." },
+      { id: "b5", p: "A truck driving over a bridge", o: LD, a: 0, why: "The truck is moving, so it is a live load." },
+      { id: "b6", p: "The concrete piers under a bridge", o: LD, a: 1, why: "The piers are part of the structure and never move." },
+      { id: "b7", p: "Furniture in an apartment", o: LD, a: 0, why: "Furniture can be moved in, out, and around. It is a live load." },
+      { id: "b8", p: "The craft sticks in your own build", o: LD, a: 1, why: "Your structure's own sticks and bricks are its dead load." },
+      { id: "b9", p: "The textbooks you stacked on your build", o: LD, a: 0, why: "You added and removed them during testing. That is a live load." },
+      { id: "b10", p: "The floor deck of a parking garage", o: LD, a: 1, why: "The deck itself is part of the structure. The cars parked on it are the live load." }
+    ]
+  },
+  {
+    key: "C", kicker: "Forces", title: "Name That Force",
+    intro: "Tension stretches. Compression squishes. Shear slides. Torsion twists. Pick the force that is acting in each situation.",
+    qs: [
+      { id: "c1", p: "A kid sits on a swing. What force are the chains under?", o: FORCES, a: 0, why: "The kid's weight pulls down and the swing set holds the top. The chains are stretched." },
+      { id: "c2", p: "You sit in a chair. What force are the chair legs under?", o: FORCES, a: 1, why: "Your weight pushes down and the floor pushes up, so the legs are squeezed." },
+      { id: "c3", p: "You wring out a wet towel. What force is that?", o: FORCES, a: 3, why: "Each hand turns the opposite way. That twisting is torsion." },
+      { id: "c4", p: "You push the top of a stack of cards sideways and the cards slide apart. What force is that?", o: FORCES, a: 2, why: "Layers sliding past each other is shear." },
+      { id: "c5", p: "The steel cables on a suspension bridge hold up the deck. What force are the cables under?", o: FORCES, a: 0, why: "The deck hangs from the cables and pulls them tight." },
+      { id: "c6", p: "The towers and piers of a bridge hold up the weight above them. What force are they under?", o: FORCES, a: 1, why: "Weight presses down on them from above. That is compression." },
+      { id: "c7", p: "An earthquake shakes the ground sideways and a building starts to lean. Engineers add shear walls and diagonal braces. What force are they fighting?", o: FORCES, a: 2, why: "Sideways pushing that makes a structure rack or lean is shear." },
+      { id: "c8", p: "Strong wind makes a tall, thin tower twist. What force is that?", o: FORCES, a: 3, why: "Twisting around the tower's center is torsion." },
+      { id: "c9", p: "You pile books on your build's deck and the wall sticks start to bow outward. What force are the wall sticks under?", o: FORCES, a: 1, why: "The load pushes down on the walls from above and squeezes them. Bowing is how a squeezed stick fails." },
+      { id: "c10", p: "Scissors cut through paper. What force cuts the paper?", o: FORCES, a: 2, why: "The two blades push the paper in opposite directions so it slides apart. Scissors are sometimes called shears for this reason." }
+    ]
+  },
+  {
+    key: "D", kicker: "Design", title: "Built for a Purpose",
+    intro: "A structure's design depends on its job. Pick the reason each design choice makes sense.",
+    qs: [
+      { id: "d1", p: "A greenhouse has clear walls and a clear roof. Why?", o: ["To make it lighter so the foundation can be smaller", "To let sunlight in while trapping warmth for the plants", "So people can see inside from the road", "Because glass is the strongest building material"], a: 1, why: "A greenhouse's job is to create the right conditions for plants: light, heat, and humidity." },
+      { id: "d2", p: "A cold storage warehouse has thick, insulated walls and very few windows. Why?", o: ["To hold more weight on the roof", "To keep the inside cold and steady no matter the weather", "To resist torsion from wind", "To let trucks drive inside"], a: 1, why: "Its job is to keep a specific environment, which is cold. Insulation keeps outside heat out." },
+      { id: "d3", p: "What is the main job of a bridge?", o: ["Provide livable space", "Carry loads across a span", "Control temperature", "Block the wind"], a: 1, why: "A bridge carries people and vehicles across a gap, like a river or a road." },
+      { id: "d4", p: "Houses in Massachusetts usually have sloped roofs. Why?", o: ["Sloped roofs are cheaper to build", "They make the walls stronger", "They shed rain and snow so it doesn't pile up", "They let more sunlight inside"], a: 2, why: "Snow and water slide off a slope, which keeps the snow load lower and prevents leaks." },
+      { id: "d5", p: "A skyscraper needs a deep foundation, but a garden shed can use a shallow one. Why?", o: ["A heavier structure has to send its load deeper to firm ground", "Deep foundations look more impressive", "Sheds don't have any dead load", "Skyscrapers have no live load"], a: 0, why: "More weight needs a stronger, deeper foundation to keep the structure from sinking or tipping." },
+      { id: "d6", p: "Old New England covered bridges were made of wood. Why did builders put a roof on them?", o: ["To give travelers shade", "To protect the wooden deck and trusses from rain and snow so they last longer", "To make the bridge heavier so it wouldn't blow away", "Roofs were required by law"], a: 1, why: "Wood rots when it stays wet. The roof protected the structural parts, and many covered bridges have lasted over 150 years." }
+    ]
+  }
+];
+
+const TEXT_IDS = ["t_what", "t_load", "t_force", "t_fail", "t_change", "t_system", "t_green"];
+const TEXT_LABELS = {
+  t_what: "1. What we built and its purpose",
+  t_load: "2. Maximum live load",
+  t_force: "3. Force that caused failure",
+  t_fail: "4. Where it failed first",
+  t_change: "5. Redesign change",
+  t_system: "6. Load path",
+  t_green: "7. Greenhouse redesign"
+};
+const STORE_KEY = "structural-systems-worksheet-v1";
+let state = { answers: {}, text: {}, name: "", period: "" };
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+const allQs = SECTIONS.flatMap(s => s.qs);
+const qById = Object.fromEntries(allQs.map(q => [q.id, q]));
+
+function el(tag, attrs = {}, html) {
+  const n = document.createElement(tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (html !== undefined) n.innerHTML = html;
+  return n;
+}
+
+function renderSections() {
+  const host = document.getElementById("parts");
+  host.style.display = "flex"; host.style.flexDirection = "column"; host.style.gap = "28px";
+  let n = 0;
+  SECTIONS.forEach(sec => {
+    const s = el("section", { class: "part", id: "part" + sec.key });
+    s.innerHTML = `
+      <div class="part-head">
+        <div class="part-letter">${sec.key}</div>
+        <div class="part-title"><span class="label">${sec.kicker}</span><h2>${sec.title}</h2></div>
+        <span class="part-score" id="score${sec.key}"></span>
+      </div>
+      <div class="part-body">
+        <p class="intro">${sec.intro}</p>
+        ${sec.diagram ? `<div class="diagram">${BRIDGE_SVG}</div>` : ""}
+        <div class="qgrid ${sec.compact ? "compact" : ""}"></div>
+      </div>`;
+    const grid = s.querySelector(".qgrid");
+    sec.qs.forEach(q => {
+      n++;
+      const card = el("div", { class: "q", id: "q_" + q.id });
+      card.innerHTML = `<span class="q-num">${sec.key}${sec.qs.indexOf(q) + 1}</span><p class="q-prompt">${q.p}</p><div class="opts"></div><p class="why" hidden></p>`;
+      const opts = card.querySelector(".opts");
+      q.o.forEach((label, i) => {
+        const b = el("button", { class: "opt", type: "button", id: `o_${q.id}_${i}` }, label);
+        b.addEventListener("click", () => choose(q.id, i));
+        opts.appendChild(b);
+      });
+      grid.appendChild(card);
+    });
+    host.appendChild(s);
+  });
+}
+
+function choose(id, i) {
+  if (state.answers[id] !== undefined) return;
+  state.answers[id] = i;
+  save();
+  paintQ(id);
+  update();
+}
+
+function paintQ(id) {
+  const q = qById[id];
+  const card = document.getElementById("q_" + id);
+  const pick = state.answers[id];
+  const buttons = card.querySelectorAll(".opt");
+  const why = card.querySelector(".why");
+  card.classList.remove("right", "wrong");
+  buttons.forEach((b, i) => {
+    b.classList.remove("is-right", "is-pick-wrong");
+    b.disabled = pick !== undefined;
+  });
+  if (pick === undefined) { why.hidden = true; return; }
+  const ok = pick === q.a;
+  card.classList.add(ok ? "right" : "wrong");
+  buttons[q.a].classList.add("is-right");
+  if (!ok) buttons[pick].classList.add("is-pick-wrong");
+  why.innerHTML = `<b>${ok ? "Correct" : "Not quite"}</b>${q.why}`;
+  why.hidden = false;
+}
+
+function textDone(id) {
+  const v = (state.text[id] || "").trim();
+  return v.length > 0;
+}
+
+function update() {
+  let correct = 0, answered = 0;
+  const tally = document.getElementById("tally");
+  tally.innerHTML = "";
+  SECTIONS.forEach(sec => {
+    const c = sec.qs.filter(q => state.answers[q.id] === q.a).length;
+    const a = sec.qs.filter(q => state.answers[q.id] !== undefined).length;
+    correct += c; answered += a;
+    const chip = document.getElementById("score" + sec.key);
+    chip.textContent = a === sec.qs.length ? `${c} / ${sec.qs.length} correct` : `${a} / ${sec.qs.length} answered`;
+    chip.classList.toggle("done", a === sec.qs.length);
+    tally.appendChild(el("div", {}, `<span class="label">Part ${sec.key} · ${sec.title}</span><strong>${c} / ${sec.qs.length}</strong>`));
+  });
+  const tDone = TEXT_IDS.filter(textDone).length;
+  const chipE = document.getElementById("scoreE");
+  chipE.textContent = `${tDone} / ${TEXT_IDS.length} done`;
+  chipE.classList.toggle("done", tDone === TEXT_IDS.length);
+  tally.appendChild(el("div", {}, `<span class="label">Part E · Build Analysis</span><strong>${tDone} / ${TEXT_IDS.length} written</strong>`));
+
+  const totalItems = allQs.length + TEXT_IDS.length;
+  const doneItems = answered + tDone;
+  document.getElementById("barFill").style.width = (100 * doneItems / totalItems) + "%";
+  document.getElementById("progCount").textContent = `${doneItems} / ${totalItems}`;
+  document.getElementById("bigScore").textContent = `${correct} / ${allQs.length}`;
+
+  const cl = document.getElementById("checklist");
+  const items = [
+    [!!state.name.trim(), "Name filled in"],
+    [!!state.period.trim(), "Period filled in"],
+    [answered === allQs.length, `Parts A–D answered (${answered} / ${allQs.length})`],
+    [tDone === TEXT_IDS.length, `Part E written (${tDone} / ${TEXT_IDS.length})`]
+  ];
+  cl.innerHTML = items.map(([ok, t]) => `<li class="${ok ? "ok" : ""}">${ok ? "✓ " : ""}${t}</li>`).join("");
+}
+
+function buildCopy() {
+  const lines = [];
+  lines.push("STRUCTURAL SYSTEMS WORKSHEET · 7.MS-ETS3-4(MA)");
+  lines.push(`Name: ${state.name || "(blank)"}`);
+  lines.push(`Period: ${state.period || "(blank)"}`);
+  let correct = 0;
+  SECTIONS.forEach(sec => { correct += sec.qs.filter(q => state.answers[q.id] === q.a).length; });
+  lines.push(`Score on Parts A–D: ${correct} / ${allQs.length}`);
+  lines.push("");
+  SECTIONS.forEach(sec => {
+    const c = sec.qs.filter(q => state.answers[q.id] === q.a).length;
+    lines.push(`PART ${sec.key}: ${sec.title.toUpperCase()} (${c} / ${sec.qs.length})`);
+    sec.qs.forEach((q, i) => {
+      const pick = state.answers[q.id];
+      const mark = pick === undefined ? "–" : (pick === q.a ? "✓" : "✗");
+      lines.push(`  ${sec.key}${i + 1} ${mark} ${pick === undefined ? "(not answered)" : q.o[pick]}`);
+    });
+    lines.push("");
+  });
+  lines.push("PART E: BUILD ANALYSIS");
+  TEXT_IDS.forEach(id => {
+    lines.push(TEXT_LABELS[id]);
+    lines.push("  " + ((state.text[id] || "").trim() || "(blank)"));
+  });
+  return lines.join("\n");
+}
+
+function wire() {
+  const nameI = document.getElementById("stuName");
+  const perI = document.getElementById("stuPeriod");
+  nameI.value = state.name; perI.value = state.period;
+  nameI.addEventListener("input", () => { state.name = nameI.value; save(); update(); });
+  perI.addEventListener("input", () => { state.period = perI.value; save(); update(); });
+
+  TEXT_IDS.forEach(id => {
+    const f = document.getElementById(id);
+    f.value = state.text[id] || "";
+    const ev = f.tagName === "SELECT" ? "change" : "input";
+    f.addEventListener(ev, () => { state.text[id] = f.value; save(); update(); });
+  });
+
+  const status = document.getElementById("copyStatus");
+  const ta = document.getElementById("copyText");
+  document.getElementById("copyBtn").addEventListener("click", () => {
+    const text = buildCopy();
+    ta.value = text;
+    const fallback = () => {
+      ta.hidden = false; ta.focus(); ta.select();
+      status.textContent = "Select all the text in the box and copy it.";
+    };
+    try {
+      navigator.clipboard.writeText(text).then(() => {
+        ta.hidden = true;
+        status.textContent = "Copied. Paste it into your assignment.";
+      }, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  const box = document.getElementById("confirmBox");
+  document.getElementById("resetBtn").addEventListener("click", () => { box.hidden = false; });
+  document.getElementById("confirmNo").addEventListener("click", () => { box.hidden = true; });
+  document.getElementById("confirmYes").addEventListener("click", () => {
+    state = { answers: {}, text: {}, name: "", period: "" };
+    save();
+    box.hidden = true;
+    nameI.value = ""; perI.value = "";
+    TEXT_IDS.forEach(id => { document.getElementById(id).value = ""; });
+    allQs.forEach(q => paintQ(q.id));
+    ta.hidden = true; status.textContent = "";
+    update();
+    window.scrollTo({ top: 0 });
+  });
+}
+
+load();
+renderSections();
+allQs.forEach(q => paintQ(q.id));
+wire();
+update();
+</script>
+
+</body></html>
